@@ -16,11 +16,26 @@ Menyediakan antarmuka web interaktif untuk melakukan prediksi dengan mudah.
 1. Python versi 3.10 atau lebih baru
 
 2. Paket-paket berikut diperlukan:
-xgboost
-streamlit
-scikit-learn
-imblearn
-pandas
-numpy
-matplotlib
-Langkah Instalasi
+   a. xgboost
+   
+   b. streamlit
+
+   c. scikit-learn
+
+   d. imblearn
+
+   e. pandas
+
+   f. numpy
+
+   g. matplotlib
+
+#Langkah Instalasi
+
+
+
+
+
+
+
+
