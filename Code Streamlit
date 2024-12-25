@@ -1,0 +1,110 @@
+import streamlit as st
+import numpy as np
+from joblib import load
+
+# Konfigurasi halaman
+st.set_page_config(page_title="Prediksi Kelulusan", layout="wide")
+
+# Custom styling
+st.markdown("""
+<style>
+    .stButton button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 0.8rem 1.6rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-weight: bold;
+        width: 100%;
+    }
+    .stButton button:hover {
+        background-color: #45a049;
+    }
+    .main {
+        padding: 2rem;
+    }
+    .title-container {
+        background-color: #1E88E5;
+        padding: 2rem;
+        border-radius: 1rem;
+        color: white;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    .input-container {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 1rem;
+        margin-bottom: 2rem;
+    }
+    .results-container {
+        background-color: #e3f2fd;
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+    .metric-container {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Load model dan scaler
+model = load('model.pkl')
+scaler = load('scaler.pkl')
+
+# Judul aplikasi
+st.markdown('<div class="title-container"><h1>🎓 Aplikasi Prediksi Kelulusan Mahasiswa</h1></div>', unsafe_allow_html=True)
+
+# Input data mahasiswa
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown('<div class="input-container">', unsafe_allow_html=True)
+    st.subheader("📝 Data Mahasiswa")
+    
+    admission_grade = st.slider("Nilai Masuk Mahasiswa", 0.0, 200.0, 100.0, 0.1)
+    grade_sem1 = st.slider("Nilai Rata-Rata Semester 1", 0.0, 20.0, 10.0, 0.1)
+    grade_sem2 = st.slider("Nilai Rata-Rata Semester 2", 0.0, 20.0, 10.0, 0.1)
+    prev_qualification_grade = st.slider("Nilai Kualifikasi Sebelumnya", 0.0, 200.0, 100.0, 0.1)
+    approved_sem1 = st.slider("Mata Kuliah Disetujui Semester 1", 0, 10, 5)
+    approved_sem2 = st.slider("Mata Kuliah Disetujui Semester 2", 0, 10, 5)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Prediksi hasil
+with col2:
+    st.markdown('<div class="results-container">', unsafe_allow_html=True)
+    if st.button("🔍 Prediksi Kelulusan"):
+        input_data = np.array([[admission_grade, grade_sem1, grade_sem2, prev_qualification_grade, approved_sem1, approved_sem2]])
+        input_data_scaled = scaler.transform(input_data)
+        prediction = model.predict(input_data_scaled)
+        prediction_proba = model.predict_proba(input_data_scaled)
+        
+        # Tampilkan hasil prediksi
+        result = "✅ LULUS" if prediction[0] == 1 else "❌ TIDAK LULUS"
+        st.markdown(f"<h2 style='text-align: center;'>{result}</h2>", unsafe_allow_html=True)
+        
+        # Probabilitas
+        col_prob1, col_prob2 = st.columns(2)
+        with col_prob1:
+            st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+            st.metric("Probabilitas Tidak Lulus", f"{prediction_proba[0][0]:.1%}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        with col_prob2:
+            st.markdown('<div class="metric-container">', unsafe_allow_html=True)
+            st.metric("Probabilitas Lulus", f"{prediction_proba[0][1]:.1%}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Ringkasan data
+        st.subheader("📊 Ringkasan Data")
+        st.markdown(f"""
+        - Nilai Masuk: {admission_grade:.1f}
+        - Semester 1: {grade_sem1:.1f}
+        - Semester 2: {grade_sem2:.1f}
+        - Kualifikasi: {prev_qualification_grade:.1f}
+        - MK Disetujui Sem 1: {approved_sem1}
+        - MK Disetujui Sem 2: {approved_sem2}
+        """)
+    st.markdown('</div>', unsafe_allow_html=True)
