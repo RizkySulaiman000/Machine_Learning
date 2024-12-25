@@ -8,7 +8,7 @@ prediksi melalui antarmuka interaktif berbasis Streamlit.
 Latar Belakang
 Mengetahui tingkat kelulusan mahasiswa merupakan hal penting bagi institusi pendidikan untuk memantau kualitas akademik. Dengan memanfaatkan data akademik mahasiswa, model prediksi dapat digunakan untuk memberikan wawasan awal terkait kelulusan.
 
-Tujuan
+<b>Tujuan</b>
 Mengembangkan model machine learning yang dapat memprediksi kelulusan mahasiswa berdasarkan data akademik.
 Menyediakan antarmuka web interaktif untuk melakukan prediksi dengan mudah.
 
@@ -30,7 +30,7 @@ Menyediakan antarmuka web interaktif untuk melakukan prediksi dengan mudah.
 
    g. matplotlib
 
-#Langkah Instalasi
+Langkah Instalasi
 
 
 
